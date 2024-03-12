@@ -135,4 +135,113 @@ cd <相对路径>：不以/开头的为相对路径；
         print(results)
 
 
+C++题解：
+    #include <cctype>
+    #include <iostream>
+    #include <string>
+    #include <vector>
+    using namespace std;
+    class Solution {
+    public:
+        vector<string> jumpPath = {"/", "/"};
+        string currentPath = "/";
+        void Gohome() {
+            currentPath = "/home/user";
+            if (jumpPath.size() == 2) {
+                jumpPath[0] = jumpPath[1];
+                jumpPath[1] = currentPath;
+            } else {
+                jumpPath.push_back(currentPath);
+            }
+        }
+        void JumpPath() {
+            currentPath = jumpPath[0];
+            jumpPath[0] = jumpPath[1];
+            jumpPath[1] = currentPath;
+        }
+        void GoAbsPath(string cmd) {
+            string path = cmd.substr(3, cmd.size() - 3);
+            currentPath = path;
+            if (jumpPath.size() == 2) {
+                jumpPath[0] = jumpPath[1];
+                jumpPath[1] = currentPath;
+            } else {
+                jumpPath.push_back(currentPath);
+            }
+        }
+        void GoRelPath(string cmd) {
+            string path = cmd.substr(3, cmd.size() - 3);
+            currentPath = currentPath + "/" + path;
+            if (jumpPath.size() == 2) {
+                jumpPath[0] = jumpPath[1];
+                jumpPath[1] = currentPath;
+            } else {
+                jumpPath.push_back(currentPath);
+            }
+        }
+        string GetCurrentDirectory(const vector<string>& cmds)
+        {
+            for (auto cmd : cmds) {
+                if (cmd.length() == 2) {
+                    Gohome();
+                    continue;
+                }
+                if (cmd[3] == '-') {
+                     JumpPath();
+                     continue;
+                }
+                if (cmd[3] == '/') {
+                     GoAbsPath(cmd);
+                     continue;
+                } else {
+                    GoRelPath(cmd);
+                }
+            }
+            currentPath = currentPath + "/";
+            vector<string> dirs;
+            string dir;
+            bool foundA = false;
+            for (int i = 0; i < currentPath.size(); i++) {
+                if (isalpha(currentPath[i])) {
+                    foundA = true;
+                    dir.push_back(currentPath[i]);
+                } else if (!isalpha(currentPath[i]) && foundA) {
+                    foundA = false;
+                    dirs.push_back(dir);
+                    dir.clear();
+                }
+                if (currentPath[i] == '.') {
+                    if ((i + 1) < currentPath.size()) {
+                        if (currentPath[i + 1] == '.') {
+                            if (dirs.size() > 0) {
+                                dirs.pop_back();
+                            }
+                            i++;
+                        }
+                    }
+                }
+            }
+            string res = "";
+            for (auto dir : dirs) {
+                res = res + "/" + dir;
+            }
+            return res == "" ? "/" : res;
+        }
+    };
+    int main()
+    {
+        string line;
+        getline(cin, line);
+        int num = stoi(line);
+        vector<string> cmds;
+        for (int loop = 0; loop < num; loop++) {
+            getline(cin, line);
+            cmds.push_back(line);
+        }
+        Solution parser;
+        cout << parser.GetCurrentDirectory(cmds) << endl;
+        return 0;
+    }
+
+
 
