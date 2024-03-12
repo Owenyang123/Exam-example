@@ -1,4 +1,4 @@
-1.Linux路径解析
+1.Linux路径解析  （中等）
 题目描述
 
 某简易的linux目录系统 cd 命令（change directory）功能如下：
@@ -88,7 +88,7 @@ cd <相对路径>：不以/开头的为相对路径；
     第三条：进入上一次停留的目录，最终目录为 /aa/bb
 
 
-题解：
+python题解：
 
     from typing import List
     
@@ -136,6 +136,7 @@ cd <相对路径>：不以/开头的为相对路径；
 
 
 C++题解：
+
     #include <cctype>
     #include <iostream>
     #include <string>
