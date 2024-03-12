@@ -1,4 +1,4 @@
-1.Linux路径解析  （中等）
+Linux路径解析
 题目描述
 
 某简易的linux目录系统 cd 命令（change directory）功能如下：
